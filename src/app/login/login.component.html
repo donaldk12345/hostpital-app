@@ -1,0 +1,42 @@
+<div class="cl-md mt-2 justify-content-center mt-5">
+    <div class="col-md-4 m-auto">
+        <h4 class=" text-primary font-weight-bold text-center">Bienvenue sur O-Hospital </h4>
+    </div><br>
+    <div class="col-md-4 m-auto" style="height:max-content!important;">
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header  justify-content-center text-center text-white" style="background-color:#4e73df!important;">
+                <h5 class="mb-0 text-center">Connexion</h5>
+
+            </div>
+            <div class="card-body">
+                <form [formGroup]="loginForm">
+                    <div class="mb-3">
+                        <label class="form-label" for="basic-default-fullname">Email</label>
+                        <input type="text" class="form-control" id="username" placeholder="Veillez saisir votre email" formControlName="email">
+                        <div class="col-md" *ngIf="email.touched && email.invalid">
+                            <small *ngIf="  email.errors?.['required']" style="color:red ;">Votre mail ne peut-etre null !</small>
+                            <small *ngIf="  email.errors?.['pattern']" style="color:red ;">Veillez saisir une adresse mail valide !</small>
+                        </div>
+
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="basic-default-company">Password</label>
+                        <input type="password" class="form-control" id="password" placeholder="Veillez saisir votre mot de passe" formControlName="password">
+                    </div>
+                    <div class="col-md" *ngIf="password.touched && password.invalid">
+                        <small *ngIf="  password.errors?.['required']" style="color:red ;">Le mot de passe n'est pas valide !</small>
+                        <small *ngIf="  password.errors?.['minlength']" style="color:red ;">Le mot de passe doit faire minimum 4 caractères !</small>
+
+                    </div>
+
+                    <div class="col-md text-center">
+                        <button type="submit" class="btn btn-primary" (click)="this.loginUser()" [disabled]="loginForm.status != 'VALID'">Se connecter</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+<p-toast></p-toast>

@@ -1,0 +1,139 @@
+<div class="container mt-3 pb-4">
+    <div class="col-md ">
+        <div class="col-md mt-2 mt-2 p-2">
+            <button pButton type="button" label="Ajouter" icon="pi pi-plus" class="p-button-info p-button-sm m-1" (click)="showDialog()"></button>
+            <button pButton type="button" label="Modifier" icon="pi pi-pencil" class="p-button-secondary  p-button-sm m-1" [disabled]="!updatebtn" (click)="updateCompteUser(false)"></button>
+            <button pButton type="button" label="Supprimer" icon="pi pi-trash" class="p-button-danger p-button-sm m-1" [disabled]="!deletebtn" (click)="confirmDelete()"></button>
+        </div>
+        <div class="card p-3">
+            <h4>Listes des utilisateurs</h4>
+            <p-table class="mt-2" #myTab [value]="users" [scrollable]="true" scrollDirection="horizontal" scrollHeight="400px" selectionMode="multiple" (onRowSelect)="onRowSelect($event)" [paginator]="true" [rows]="4" (datas)="getData($event)">
+
+
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width: 3rem" pFrozenColumn>
+                            <p-tableHeaderCheckbox>
+                            </p-tableHeaderCheckbox>
+                        </th>
+                        <th>username</th>
+                        <th>email</th>
+                        <th>role</th>
+                        <th>createdAt</th>
+
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-users id="tab">
+                    <tr [pSelectableRow]="users">
+                        <td style="width: 3rem" pFrozenColumn>
+                            <p-tableCheckbox [value]="users">
+                            </p-tableCheckbox>
+                        </td>
+                        <td>
+                            {{ users.username }}
+                        </td>
+                        <td>
+                            {{ users.email }}
+                        </td>
+                        <td>
+                            {{ users.role?.name }}
+                        </td>
+                        <td>
+                            {{ users.created_at| date:'dd/MM/yyyy' }}
+                        </td>
+                    </tr>
+
+                </ng-template>
+            </p-table>
+
+        </div>
+    </div>
+
+</div>
+<p-dialog header="Ajouter un utilisateur" [(visible)]="display" [style]="{ width: '30vw' }" styleClass="p-fluid" [modal]="true">
+    <ng-template pTemplate="content">
+        <form [formGroup]="addUserForm">
+            <div class="mb-3">
+                <label class="form-label" for="basic-default-fullname">Nom</label>
+                <input type="text" class="form-control" id="username" placeholder="Veillez saisir le prenom" formControlName="username">
+                <div class="col-md" *ngIf="username.touched && username.invalid">
+                    <small *ngIf="  username.errors?.['required']" style="color:red ;">Le nom ne peut-etre null !</small>
+                    <small *ngIf="  username.errors?.['minlength']" style="color:red ;">Le nom doit faire au moins 4 caratères !</small>
+                </div>
+
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="basic-default-fullname">Email</label>
+                <input type="email" class="form-control" id="email" placeholder="Veillez saisir le email" formControlName="email">
+                <div class="col-md" *ngIf="email.touched && email.invalid">
+                    <small *ngIf="  email.errors?.['required']" style="color:red ;">Le mail ne peut-etre null !</small>
+                    <small *ngIf="  email.errors?.['pattern']" style="color:red ;">Veillez saisir une adresse mail valide !</small>
+                </div>
+
+            </div>
+            <div class="mb-3">
+                <p-dropdown inputId="dropdown" [autoDisplayFirst]="false" [filter]="true" filterBy="name" [options]="roles" optionLabel="name" appendTo="body" optionValue="id" formControlName="role_id" placeholder="Choisir le role " class="col-md"></p-dropdown>
+            </div>
+            <div class="col-md" *ngIf="role_id.touched &&  role_id.invalid">
+                <small *ngIf="  role_id.errors?.['required']" style="color:red ;">Le role ne peut-etre null !</small>
+
+            </div>
+
+
+
+        </form>
+
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+        <span>
+            <button pButton pRipple label="Enregistrer" (click)="addUser()" icon="pi pi-check" class="p-button-info" [disabled]="addUserForm.status != 'VALID'"></button>
+        </span>
+        <span>
+            <button pButton pRipple label="Annuler" icon="pi pi-times" (click)="hideDialog()" class="p-button-danger"></button>
+        </span>
+    </ng-template>
+</p-dialog>
+<p-dialog header="{{label}}" [(visible)]="addUpdateForm" [style]="{ width: '30vw' }" styleClass="p-fluid" [modal]="true">
+    <ng-template pTemplate="content">
+        <form [formGroup]="addUserForm">
+            <div class="mb-3">
+                <label class="form-label" for="basic-default-fullname">Nom</label>
+                <input type="text" class="form-control" id="username" placeholder="Veillez saisir le prenom" formControlName="username">
+                <div class="col-md" *ngIf="username.touched && username.invalid">
+                    <small *ngIf="  username.errors?.['required']" style="color:red ;">Le nom ne peut-etre null !</small>
+                    <small *ngIf="  username.errors?.['minlength']" style="color:red ;">Le nom doit faire au moins 4 caratères !</small>
+                </div>
+
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="basic-default-fullname">Email</label>
+                <input type="email" class="form-control" id="email" placeholder="Veillez saisir le email" formControlName="email">
+                <div class="col-md" *ngIf="email.touched && email.invalid">
+                    <small *ngIf="  email.errors?.['required']" style="color:red ;">Le mail ne peut-etre null !</small>
+                    <small *ngIf="  email.errors?.['pattern']" style="color:red ;">Veillez saisir une adresse mail valide !</small>
+                </div>
+
+            </div>
+            <div class="mb-3">
+                <p-dropdown inputId="dropdown" [autoDisplayFirst]="false" [filter]="true" filterBy="name" [options]="roles" optionLabel="name" appendTo="body" optionValue="id" formControlName="role_id" placeholder="Choisir le role " class="col-md"></p-dropdown>
+            </div>
+            <div class="col-md" *ngIf="role_id.touched &&  role_id.invalid">
+                <small *ngIf="  role_id.errors?.['required']" style="color:red ;">Le role ne peut-etre null !</small>
+            </div>
+
+        </form>
+    </ng-template>
+    <ng-template pTemplate="footer">
+        <span>
+            <button pButton pRipple label="Enregistrer" (click)="updateUser()" icon="pi pi-check" class="p-button-info" (click)="updateUser()" [disabled]="addUserForm.status != 'VALID'"></button>
+        </span>
+        <span>
+            <button pButton pRipple label="Annuler" icon="pi pi-times" (click)="hideDialog()" class="p-button-danger"></button>
+        </span>
+    </ng-template>
+</p-dialog>
+
+<p-toast></p-toast>
+<p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>

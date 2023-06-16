@@ -1,0 +1,61 @@
+<div class="col-md text-center">
+    <h4>Mes informations </h4>
+</div>
+
+<div class="col-md m-2">
+    <div class="row">
+        <div class="col-md-6 p-2">
+
+            <div class="card">
+                <form [formGroup]="updatePasswordForm">
+                    <div class="card header p-2 text-center">Modifier mon mot de passe</div>
+                    <div class="card-body">
+                        <div class="flex flex-column  g-4">
+                            <label htmlFor="username">Nouveau mot de passe</label><br>
+                            <input pInputText type="password" id="password" class="form-control" aria-describedby=" username-help " formControlName="password" />
+                            <div class="col-md " *ngIf="password.touched && password.invalid ">
+                                <small id="username-help " *ngIf=" password.errors?.[ 'required'] " style="color:red ; ">Le mot de passe ne peut-etre null !.</small>
+                                <small id="username-help " *ngIf=" password.errors?.[ 'minLength'] " style="color:red ; ">Le mot de passe doit avoir minimum 4 caractères!.</small>
+                            </div>
+
+                        </div>
+                        <div class="flex flex-column g-4 ">
+                            <label htmlFor="username ">Confirmation mot de passe</label><br>
+                            <input pInputText type="password" id="confirm_password " class="form-control " aria-describedby="username-help " formControlName="confirm_password" />
+                            <div class="col-md " *ngIf="confirm_password.touched && confirm_password.invalid ">
+                                <small id="username-help " *ngIf=" confirm_password.errors?.[ 'required'] " style="color:red ; ">Le mot de passe ne peut-etre null !.</small>
+                                <small id="username-help " *ngIf=" confirm_password.errors?.[ 'minLength'] " style="color:red ; ">Le mot de passe doit avoir minimum 4 caractères!.</small>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md text-center p-1 ">
+                        <button pButton type="button " label="Enregistrer " (click)="this.updatePassword() " [disabled]="updatePasswordForm.status !='VALID' " class="p-button-info p-button-sm m-1 "></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+
+        <div class="col-md-6 " style="height:100%!important; ">
+            <div class="card ">
+                <div class="card header p-2 text-center "> Compte</div>
+                <div class="card-body " *ngIf="user">
+                    <div>
+                        <p><span>Nom: &nbsp; {{ user?.username}} </span></p>
+                    </div>
+                    <div>
+                        <p><span>Email: &nbsp; {{ user?.email}} </span></p>
+                    </div>
+                    <div>
+                        <p><span>Role: &nbsp; {{ user?.role?.name}} </span></p>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<p-toast></p-toast>

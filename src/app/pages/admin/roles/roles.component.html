@@ -1,0 +1,111 @@
+<div class="container mt-3 pb-4">
+    <div class="col-md ">
+        <div class="col-md mt-2 mt-2 p-2">
+            <button pButton type="button" label="Ajouter" icon="pi pi-plus" class="p-button-info p-button-sm m-1" (click)="showDialog()"></button>
+            <button pButton type="button" label="Modifier" icon="pi pi-pencil" class="p-button-secondary  p-button-sm m-1" [disabled]="!updatebtn" (click)="updateRoleUser()"></button>
+            <button pButton type="button" label="Supprimer" icon="pi pi-trash" class="p-button-danger p-button-sm m-1" [disabled]="!deletebtn"></button>
+        </div>
+        <div class="card p-3">
+            <h4>Listes des roles</h4>
+            <p-table class="mt-2" #myTab [value]="roles" [scrollable]="true" scrollHeight="400px" selectionMode="multiple" (onRowSelect)="onRowSelect($event)" [paginator]="true" [rows]="4" (datas)="getData($event)">
+
+
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width: 1rem">
+                            <p-tableHeaderCheckbox>
+                            </p-tableHeaderCheckbox>
+                        </th>
+                        <th>nom</th>
+                        <th>permissions</th>
+
+
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-roles id="tab">
+                    <tr [pSelectableRow]="roles">
+                        <td style="width: 1rem">
+                            <p-tableCheckbox [value]="roles">
+                            </p-tableCheckbox>
+                        </td>
+                        <td>
+                            {{ roles.name }}
+                        </td>
+                        <td>
+                            {{ roles.permissions.name }}
+                        </td>
+
+                    </tr>
+
+                </ng-template>
+            </p-table>
+
+        </div>
+    </div>
+
+</div>
+<p-dialog header="Ajouter role" [(visible)]="display" [style]="{ width: '30vw' }" styleClass="p-fluid" [modal]="true">
+    <ng-template pTemplate="content">
+        <form [formGroup]="addRoleForm">
+            <div class="mb-3">
+                <label class="form-label" for="basic-default-fullname">Nom</label>
+                <input type="text" class="form-control" id="username" placeholder="Veillez saisir le prenom" formControlName="name">
+                <div class="col-md" *ngIf="name.touched && name.invalid">
+                    <small *ngIf=" name.errors?.['required']" style="color:red ;">Le nom ne peut-etre null !</small>
+
+                </div>
+
+            </div>
+
+            <div class="mb-3">
+                <p-multiSelect filterBy="name" [options]="permission" optionLabel="name" appendTo="body" optionValue="id" formControlName="permissions" placeholder="Choisir la permissions " class="col-md"></p-multiSelect>
+            </div>
+            <div class="col-md" *ngIf="permissions.touched &&  permissions.invalid">
+
+            </div>
+
+
+        </form>
+    </ng-template>
+    <ng-template pTemplate="footer">
+        <span>
+            <button pButton pRipple label="Enregistrer" (click)="addRole()" [disabled]="addRoleForm.status != 'VALID'"></button>
+        </span>
+        <span>
+            <button pButton pRipple label="Annuler" icon="pi pi-times" (click)="hideDialog()" class="p-button-danger"></button>
+        </span>
+    </ng-template>
+</p-dialog>
+<p-dialog header="Modifier role" [(visible)]="addUpdateForm" [style]="{ width: '30vw' }" styleClass="p-fluid" [modal]="true">
+    <ng-template pTemplate="content">
+        <form [formGroup]="addRoleForm">
+            <div class="mb-3">
+                <label class="form-label" for="basic-default-fullname">Nom</label>
+                <input type="text" class="form-control" id="username" placeholder="Veillez saisir le prenom" formControlName="name">
+                <div class="col-md" *ngIf="name.touched && name.invalid">
+                    <small *ngIf=" name.errors?.['required']" style="color:red ;">Le nom ne peut-etre null !</small>
+
+                </div>
+
+            </div>
+
+            <div class="mb-3">
+                <p-multiSelect filterBy="name" [options]="permission" optionLabel="name" appendTo="body" optionValue="id" formControlName="permissions" placeholder="Choisir la permissions " class="col-md"></p-multiSelect>
+            </div>
+            <div class="col-md" *ngIf="permissions.touched &&  permissions.invalid">
+
+            </div>
+
+        </form>
+    </ng-template>
+    <ng-template pTemplate="footer">
+        <span>
+            <button pButton pRipple label="Enregistrer" (click)="addRole()" [disabled]="addRoleForm.status != 'VALID'"></button>
+        </span>
+        <span>
+            <button pButton pRipple label="Annuler" icon="pi pi-times" (click)="hideDialog()" class="p-button-danger"></button>
+        </span>
+    </ng-template>
+</p-dialog>
+<p-toast></p-toast>

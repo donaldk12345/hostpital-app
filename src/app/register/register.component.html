@@ -1,0 +1,55 @@
+<div class="container mt-2 justify-content-center mt-5">
+
+    <div class="col-md-5 m-auto">
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Inscription</h5>
+            </div>
+            <div class="card-body">
+                <form [formGroup]="registerForm">
+                    <div class="mb-3">
+                        <label class="form-label" for="basic-default-fullname">Username</label>
+                        <input type="text" class="form-control" id="username" placeholder="Veillez saisir votre prenom" formControlName="username">
+                        <div class="col-md" *ngIf="username.touched && username.invalid">
+                            <small *ngIf="  username.errors?.['required']" style="color:red ;">Votre prenom ne peut-etre null !</small>
+                            <small *ngIf="  username.errors?.['minlength']" style="color:red ;">Votre prenom doit faire au moins 4 caratères !</small>
+                        </div>
+
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="basic-default-fullname">Email</label>
+                        <input type="email" class="form-control" id="email" placeholder="Veillez saisir votre email" formControlName="email">
+                        <div class="col-md" *ngIf="email.touched && email.invalid">
+                            <small *ngIf="  email.errors?.['required']" style="color:red ;">Votre mail ne peut-etre null !</small>
+                            <small *ngIf="  email.errors?.['pattern']" style="color:red ;">Veillez saisir une adresse mail valide !</small>
+                        </div>
+
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="basic-default-company">Password</label>
+                        <input type="password" class="form-control" id="password" placeholder="Veillez saisir votre mot de passe" formControlName="password">
+                    </div>
+                    <div class="col-md" *ngIf="password.touched && password.invalid">
+                        <small *ngIf="  password.errors?.['required']" style="color:red ;">Le mot de passe n'est pas valide !</small>
+                        <small *ngIf="  password.errors?.['minlength']" style="color:red ;">Le mot de passe doit faire minimum 4 caractères !</small>
+
+                    </div>
+                    <!--    <div class="mb-3">
+                        <label class="form-label" for="basic-default-company">Confirmation</label>
+                        <input type="password" class="form-control" id="password" placeholder="Veillez confirmé votre mot de passe" formControlName="confirm_password">
+                    </div>
+                    <div class="col-md" *ngIf="confirm_password.touched && confirm_password.invalid">
+                        <small *ngIf="  confirm_password.errors?.['required']" style="color:red ;">Le mot doit etre le meme !</small>
+                        <small *ngIf="  confirm_password.errors?.['minlength']" style="color:red ;">Le mot de passe doit faire minimum 8 caractères !</small>
+
+                    </div>
+                        -->
+                    <button type="submit" class="btn btn-primary" (click)="this.registerUser()" [disabled]="registerForm.status != 'VALID'">Send</button>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+<p-toast></p-toast>
