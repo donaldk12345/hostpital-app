@@ -8,17 +8,22 @@ import { EtatComponent } from "./etat/etat.component";
 import { ProfileComponent } from "./profile/profile.component";
 import { RolesComponent } from "./roles/roles.component";
 import { PartientsComponent } from "./partients/partients.component";
+import { AuthGuard } from "src/app/gaurd/auth.guard";
+import { RoleGuard } from "src/app/gaurd/role.guard";
+import { TablesComponent } from "src/app/composant/tables/tables.component";
 
 
 const routes: Routes = [
   {
-    path: 'admin',
+    path: 'admin', canActivate: [AuthGuard],
     component: AdminComponent, children: [
-      { path: 'users', component: UsersComponent },
+      { path: 'users', component: UsersComponent, canActivate:[RoleGuard] },
       { path: 'dashboard', component: DashboardComponent },
-      { path: 'roles', component: RolesComponent },
+      { path: 'roles', component: RolesComponent , canActivate:[RoleGuard]},
       { path: 'profile', component: ProfileComponent },
-      {path: 'patients', component: PartientsComponent}
+      { path: 'patients', component: PartientsComponent },
+      { path: 'tables', component:TablesComponent}
+
     ]
   }
 ]

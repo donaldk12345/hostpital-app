@@ -18,6 +18,7 @@ import { RegisterComponent } from './register/register.component';
 import {PaginatorModule} from 'primeng/paginator';
 import { AdminModule } from './pages/admin/admin.module';
 import { authInterceptorProviders } from './services/interceptor.service';
+import { ChartModule } from 'primeng/chart';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import { authInterceptorProviders } from './services/interceptor.service';
     ToastModule,
     DialogModule,
     PasswordModule,
+    ChartModule,
     TableModule,
     ConfirmDialogModule,
     BrowserModule,

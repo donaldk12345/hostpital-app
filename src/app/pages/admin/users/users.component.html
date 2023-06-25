@@ -2,7 +2,7 @@
     <div class="col-md ">
         <div class="col-md mt-2 mt-2 p-2">
             <button pButton type="button" label="Ajouter" icon="pi pi-plus" class="p-button-info p-button-sm m-1" (click)="showDialog()"></button>
-            <button pButton type="button" label="Modifier" icon="pi pi-pencil" class="p-button-secondary  p-button-sm m-1" [disabled]="!updatebtn" (click)="updateCompteUser(false)"></button>
+            <button pButton type="button" label="Modifier" icon="pi pi-pencil" class="p-button-secondary  p-button-sm m-1" [disabled]="!updatebtn" (click)="updateCompteUser()"></button>
             <button pButton type="button" label="Supprimer" icon="pi pi-trash" class="p-button-danger p-button-sm m-1" [disabled]="!deletebtn" (click)="confirmDelete()"></button>
         </div>
         <div class="card p-3">

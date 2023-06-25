@@ -52,6 +52,7 @@ export class LoginComponent implements OnInit{
       console.log(data);
       this.http.sessionset('token', JSON.stringify(data.token));
       this.http.sessionset('user', JSON.stringify(data.user));
+      this.http.sessionset('role', JSON.stringify(data.user.role.name));
       this.http.sessionset('username', JSON.stringify(data.user.username));
       this.router.navigate(['/admin/dashboard']);
         // this.reloadPage();

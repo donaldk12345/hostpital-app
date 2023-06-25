@@ -15,18 +15,20 @@ import { ResponseService } from "src/app/services/response.service";
 export class AdminComponent implements OnInit{
 
   user: any;
+  role: any;
   currentUser: any;
   constructor(private httpService: ResponseService, private router: Router) {
 
     // this.user = JSON.parse(this.http.getUser());
-      this.user = JSON.parse(this.httpService.getUser());
+    this.user = JSON.parse(this.httpService.getUser());
+    this.role = JSON.parse(this.httpService.sessionget('role'));
 
   }
     ngOnInit(): void{
-    if (this.user?.id==null) {
-      this.router.navigate(['/login']);
-       return;
-      }
+    // if (this.user?.id==null) {
+    //   this.router.navigate(['/login']);
+    //    return;
+    //   }
 
       console.log(this.user);
 

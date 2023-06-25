@@ -1,6 +1,6 @@
 <div class="card">
-    <p-table [columns]="colum" [value]="data" [tableStyle]="{ 'min-width': '50rem' }" [reorderableColumns]="true" [sortField]="monSort" [sortOrder]="-1" styleClass="p-datatable-gridlines" responsiveLayout="scroll" [(selection)]="selectedProducts" selectionMode="multiple"
-        [responsive]="true" (onRowUnselect)="onRowSelect($event)" [paginator]="true" [rows]="4" (onRowSelect)="onRowSelect($event)" [scrollable]="true" scrollHeight="300px" scrollDirection="both">
+    <p-table [columns]="colum" [value]="data" [tableStyle]="{ 'min-width': '50rem' }" [reorderableColumns]="true" styleClass="p-datatable-gridlines" responsiveLayout="scroll" [(selection)]="selectedProducts" selectionMode="multiple" [responsive]="true" (onRowUnselect)="onRowSelect($event)"
+        [paginator]="true" [style]="{'width' : '100%'}" [rows]="4" (onRowSelect)="onRowSelect($event)" [scrollable]="true" scrollHeight="300px" scrollDirection="both">
         <ng-template pTemplate="header" let-columns>
 
             <tr [pSelectableRow]="datas">

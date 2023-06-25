@@ -12,8 +12,13 @@ export const url = {
      role_list: 'roles',
   permissions: 'permissions',
   patient: 'patients',
+  patient_delete: 'patient',
+
   paatient_detail: 'patient',
-    antecedent: 'antecedents'
+  antecedent: 'antecedents',
+  dashboardItems: 'items',
+  dashboard_patient: 'items/patients',
+  dashboard_roles: 'items/roles'
 
 
 

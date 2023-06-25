@@ -12,7 +12,8 @@ import { MessagesModule } from 'primeng/messages';
 import { InputTextModule } from 'primeng/inputtext';
 import {ToastModule} from 'primeng/toast';
 import { DialogModule } from 'primeng/dialog';
-import {MultiSelectModule} from 'primeng/multiselect';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { ChartModule } from 'primeng/chart';
 import {ConfirmDialog, ConfirmDialogModule} from 'primeng/confirmdialog';
 import { PasswordModule } from 'primeng/password';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -59,9 +60,10 @@ import { ComposantModule } from "../../composant/composant.module";
       MessagesModule,
         ToastModule,
         TableModule,
-        DialogModule,
+      DialogModule,
+        ChartModule,
         MultiSelectModule,
-        ConfirmPopupModule,
+      ConfirmPopupModule,
         PasswordModule,
         TableModule,
         ConfirmDialogModule,

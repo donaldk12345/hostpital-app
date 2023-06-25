@@ -17,7 +17,7 @@ export class TablesComponent implements OnInit, OnChanges{
   // @Output() datas2: EventEmitter<any> = new EventEmitter<any>()
 
   // loading :boolean = true
-  constructor( public translate: TranslateService) {
+  constructor() {
     console.log("sssssssss",this.data);
 
     this.selectedProducts = this.data

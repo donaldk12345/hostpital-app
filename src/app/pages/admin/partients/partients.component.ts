@@ -1,7 +1,7 @@
 import { Component, ElementRef, EventEmitter, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { Observable } from 'rxjs';
 import { ResponseService } from 'src/app/services/response.service';
 import { environment } from 'src/environments/enviroment';
@@ -45,15 +45,18 @@ export class PartientsComponent {
     exportColumns: any[] | undefined;
     patientID: any;
   antecedents: any[]=[];
-    constructor(private http: ResponseService,private formBuilder: FormBuilder,private messageService: MessageService, private router: Router) {
+  create_by: any;
+    constructor(private confirmationService: ConfirmationService,private http: ResponseService,private formBuilder: FormBuilder,private messageService: MessageService, private router: Router) {
 
-    // this.user = JSON.parse(this.http.getUser());
+      // this.user = JSON.parse(this.http.getUser());
+
 
   }
 
     onRowSelect(dat: any): void {
-  console.log('Data : ', dat.data.id);
-    this.id = dat.data.id;
+      console.log('Data : ', dat);
+      console.log('username', this.create_by);
+      // this.id = dat.id;
     // this.username = dat.data.username;
     // this.email = dat.data.email,
     //   this.role_id= dat.data.role.id
@@ -72,8 +75,10 @@ onRowUnselect(dat: any) {
 
     }
   ngOnInit(): void {
+
+          this.create_by = this.http.sessionget('username');
         this.addPatientForm = new FormGroup({
-          'nom': new FormControl('', [Validators.required]),
+          'nom':  new FormControl('', [Validators.required]),
           'prenom': new FormControl('', [Validators.required]),
           'quartier': new FormControl('', [Validators.required]),
           'numero_cni': new FormControl('', [Validators.required]),
@@ -85,7 +90,20 @@ onRowUnselect(dat: any) {
           'antecedents': new FormControl([this.antecedents])
         });
 
+     this.cols = [
+      {field: 'nom', header: 'Nom', type: 'string', width: 250, isFroz: true},
+      {field: 'prenom', header: 'Prenom', type: 'string', width: 250, isFroz: false},
+       { field: 'ville', header: 'Ville', type: 'string', width: 150, isFroz: false },
+       { field: 'telephone', header: 'Téléphone', type: 'string', width: 150, isFroz: false },
+        { field: 'sexe', header: 'Sexe', type: 'string', width: 150, isFroz: false },
+       { field: 'date_naiss', header: 'Date de Naissance', type: 'jour', width: 250, isFroz: false },
+      {field: 'created_at', header: 'Créer le', type: 'date', width: 250, isFroz: false},
 
+
+
+
+    ];
+    this.exportColumns = this.cols.map(col => ({title: col.header, dataKey: col.field}));
     this.getPatients();
     this.sexPatient();
 
@@ -124,7 +142,7 @@ getData(dat : any) : void {
      * Gérer le bouton Supprimer
      */
     manageDeleteBtn(){
-      if(this.selectElement.length == 0){
+      if(this.selectElement.length == 0 || this.selectElement.length > 1){
         this.deletebtn = false
       } else {
         this.deletebtn =true;
@@ -154,13 +172,38 @@ getData(dat : any) : void {
    showDialog() {
         this.display = true;
 }
-  hideDialog() {
-  this.display= false;
 
+  updateDialog() {
+    this.addUpdateForm = true;
+  }
+  hideDialog() {
+    this.display = false;
+    this.patientID = [];
+    this.detailDialog = false;
+    this.addUpdateForm = false;
 
 }
 
-    addPatient(){
+  updatePatientView() {
+            this.addPatientForm.patchValue({
+          'nom': this.selectElement[0].nom,
+          'prenom': this.selectElement[0].prenom,
+          'quartier': this.selectElement[0].quartier,
+          'numero_cni': this.selectElement[0].numero_cni,
+          'profession': this.selectElement[0].profession,
+          'telephone': this.selectElement[0].telephone,
+          'sexe': this.selectElement[0].sexe,
+          'ville': this.selectElement[0].ville,
+
+    })
+    this.addPatientForm.controls['date_naiss'].setValue(this.selectElement[0].date_naiss);
+    this.addUpdateForm = true;
+    this.antecedents = this.selectElement[0].antecedents;
+  }
+
+  addPatient() {
+
+
     let addRequest= {
       nom :this.addPatientForm.value.nom,
       prenom: this.addPatientForm.value.prenom,
@@ -171,6 +214,7 @@ getData(dat : any) : void {
       telephone :this.addPatientForm.value.telephone,
       sexe: this.addPatientForm.value.sexe,
       ville: this.addPatientForm.value.ville,
+    createdBy: this.create_by,
       antecedents: this.antecedents
 
     };
@@ -206,7 +250,11 @@ getData(dat : any) : void {
 
   getPatientByID() {
 
-    this.http.getElement(API_URI + url.paatient_detail + '/' + this.id).subscribe({
+    let id = this.selectElement[0].id;
+
+    console.log('mon id', id);
+
+    this.http.getElement(API_URI + url.paatient_detail + '/' + id).subscribe({
 
       next: data => {
         if (data) {
@@ -242,6 +290,57 @@ getData(dat : any) : void {
     });
   }
 
+  deletePatient() {
+
+    // let elementId: any;
+    // this.selectElement.forEach((element: any) => {
+    //       elementId.push(element.id);
+    //     });
+    console.log('element', this.selectElement);
+    let id = this.selectElement[0].id;
+      this.http.deleteElement(API_URI + url.patient_delete + '/' + id).subscribe(data =>{
+
+          this.messageService.add({
+            severity: 'success',
+            summary: '',
+            detail: 'patient supprimer avec succés !',
+            life: 3000
+          });
+        this.getPatients();
+
+    }, error => {
+       this.messageService.add({
+            severity:'error',
+            summary: '',
+            detail: 'Erreur ! patient non supprimer ',
+            life: 3000
+       });
+
+    })
+
+
+  }
+
+   confirmDelete() {
+
+    if (this.selectElement && this.selectElement.length > 0) {
+
+      console.log("Suppression des éléments");
+
+      this.confirmationService.confirm({
+        message: 'Voulez vous supprimer le patient ?',
+        icon: 'pi pi-info-circle',
+        acceptLabel: 'Oui',
+        rejectLabel: 'Nom',
+        acceptButtonStyleClass: "p-button-info",
+        rejectButtonStyleClass: "p-button-danger",
+        accept: () => {
+          this.deletePatient()
+        }
+      });
+
+    }
+  }
 
     /**
    * Permet de d'afficher le message et le statut de la réponse de requette

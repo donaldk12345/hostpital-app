@@ -253,18 +253,16 @@ getData(dat : any) : void {
 
   }
 
-  updateCompteUser(val:boolean) {
+  updateCompteUser() {
 
-    if (val) {
-      this.label = "Ajouter"
-    } else {
-      this.label = "Modifier"
+
+
          this.addUserForm.patchValue({
            'username': this.selectElement.data.username,
            'email': this.selectElement.data.email,
            'role_id': this.selectElement.data.role?.id
     })
-    }
+
 
     this.addUpdateForm = true;
   }

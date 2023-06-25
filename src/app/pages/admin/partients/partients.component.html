@@ -2,13 +2,15 @@
     <div class="col-md ">
         <div class="col-md mt-2 mt-2 p-2">
             <button pButton type="button" label="Ajouter" icon="pi pi-plus" class="p-button-info p-button-sm m-1" (click)="showDialog()"></button>
-            <button pButton type="button" label="Modifier" icon="pi pi-pencil" class="p-button-secondary  p-button-sm m-1" [disabled]="!updatebtn"></button>
-            <button pButton type="button" label="Détails" icon="pi pi-pencil" class="p-button-success  p-button-sm m-1" [disabled]="!detailbtn" (click)="getPatientByID()"></button>
-            <button pButton type="button" label="Supprimer" icon="pi pi-trash" class="p-button-danger p-button-sm m-1" [disabled]="!deletebtn"></button>
+            <button pButton type="button" label="Modifier" icon="pi pi-pencil" class="p-button-secondary  p-button-sm m-1" (click)="updatePatientView()" [disabled]="!updatebtn"></button>
+            <button pButton type="button" label="Détails" icon="pi pi-check" class="p-button-success  p-button-sm m-1" [disabled]="!detailbtn" (click)="getPatientByID()"></button>
+            <button pButton type="button" label="Supprimer" icon="pi pi-trash" class="p-button-danger p-button-sm m-1" [disabled]="!deletebtn" (click)="confirmDelete()"></button>
         </div>
         <div class="card p-3">
-            <h4>Listes des roles</h4>
-            <p-table class="mt-2" [value]="patients" styleClass="p-datatable-gridlines" responsiveLayout="scroll" [scrollable]="true" scrollDirection="both" scrollHeight="600px" selectionMode="multiple" (onRowSelect)="onRowSelect($event)" [paginator]="true" [rows]="4"
+            <h4 class="text-center">Listes des patients</h4>
+
+            <app-tables [data]="patients" [colum]="cols" (datas)="getData($event)" (datas)="onRowSelect($event)" class="mt-3"></app-tables>
+            <!--  <p-table class="mt-2" [value]="patients" styleClass="p-datatable-gridlines" responsiveLayout="scroll" [scrollable]="true" scrollDirection="both" scrollHeight="600px" selectionMode="multiple" (onRowSelect)="onRowSelect($event)" [paginator]="true" [rows]="4"
                 (datas)="getData($event)" [showCurrentPageReport]="true" [style]="{'width' : '100%'}" (onRowUnselect)="onRowSelect($event)">
 
 
@@ -31,7 +33,7 @@
                     </tr>
                 </ng-template>
 
-                <ng-template pTemplate="body" let-patients id="id">
+                <ng-template pTemplate="body" let-patients id="id" et-rowIndex="rowIndex">
                     <tr [pSelectableRow]="patients">
                         <td style="width: 3rem" pFrozenColumn>
                             <p-tableCheckbox [value]="patients">
@@ -54,12 +56,12 @@
 
                 </ng-template>
             </p-table>
-
+-->
         </div>
     </div>
 
 </div>
-<p-dialog header="{{label}}" [(visible)]="display" [style]="{width: '650px'}" styleClass="p-fluid" [modal]="true">
+<p-dialog header="Ajouter un patient" [(visible)]="display" [style]="{width: '650px'}" styleClass="p-fluid" [modal]="true">
     <ng-template pTemplate="content">
         <form [formGroup]="addPatientForm">
             <div class="mb-3">
@@ -176,89 +178,78 @@
         </span>
     </ng-template>
 </p-dialog>
-<p-dialog header="{{label}}" [(visible)]="addUpdateForm" [style]="{width: '900px'}" styleClass="p-fluid" [modal]="true">
+
+<p-dialog header="Modifier un patient" [(visible)]="addUpdateForm" [style]="{width: '650px'}" styleClass="p-fluid" [modal]="true">
     <ng-template pTemplate="content">
         <form [formGroup]="addPatientForm">
-            <div class="row mt-2">
-                <div class="col-6">
-                    <label class="form-label" for="basic-default-fullname">Nom</label>
-                    <input type="text" class="form-control" id="username" placeholder="Veillez saisir le prenom" formControlName="nom">
-                    <div class="col-md" *ngIf="nom.touched && nom.invalid">
-                        <small *ngIf=" nom.errors?.['required']" style="color:red ;">Le nom ne peut-etre null !</small>
+            <div class="mb-3">
+                <label class="form-label" for="basic-default-fullname">Nom</label>
+                <input type="text" class="form-control" id="username" placeholder="Veillez saisir le prenom" formControlName="nom">
+                <div class="col-md" *ngIf="nom.touched && nom.invalid">
+                    <small *ngIf=" nom.errors?.['required']" style="color:red ;">Le nom ne peut-etre null !</small>
 
-                    </div>
-
-                </div>
-                <div class="col-6">
-                    <label class="form-label" for="basic-default-fullname">Prénom</label>
-                    <input type="text" class="form-control" id="username" placeholder="Veillez saisir le prenom" formControlName="prenom">
-                    <div class="col-md" *ngIf="prenom.touched && prenom.invalid">
-                        <small *ngIf=" prenom.errors?.['required']" style="color:red ;">Le prénom ne peut-etre null !</small>
-
-                    </div>
                 </div>
 
             </div>
+            <div class="mb-3">
+                <label class="form-label" for="basic-default-fullname">Prénom</label>
+                <input type="text" class="form-control" id="username" placeholder="Veillez saisir le prenom" formControlName="prenom">
+                <div class="col-md" *ngIf="prenom.touched && prenom.invalid">
+                    <small *ngIf=" prenom.errors?.['required']" style="color:red ;">Le prénom ne peut-etre null !</small>
 
-            <div class="row mt-2">
-                <div class="col-6">
-                    <label class="form-label" for="basic-default-fullname">Quartier</label>
-                    <input type="text" class="form-control" id="username" placeholder="Veillez saisir le quartier" formControlName="quartier">
-                    <div class="col-md" *ngIf="quartier.touched && quartier.invalid">
-                        <small *ngIf=" quartier.errors?.['required']" style="color:red ;">Le quartier ne peut-etre null !</small>
-
-                    </div>
                 </div>
-                <div class="col-6">
-                    <label class="form-label" for="basic-default-fullname">Cni</label>
-                    <input type="text" class="form-control" id="username" placeholder="Veillez saisir le numéro de la cni" formControlName="numero_cni">
-                    <div class="col-md" *ngIf="numero_cni.touched && numero_cni.invalid">
-                        <small *ngIf=" numero_cni.errors?.['required']" style="color:red ;">Le numéro de la cni ne peut-etre null !</small>
-
-                    </div>
-                </div>
-
             </div>
 
-            <div class="row mt-2">
-                <div class="col-6">
-                    <label class="form-label" for="basic-default-fullname">Profession</label>
-                    <input type="text" class="form-control" id="username" placeholder="Veillez saisir la profession" formControlName="profession">
-                    <div class="col-md" *ngIf="profession.touched && profession.invalid">
-                        <small *ngIf=" profession.errors?.['required']" style="color:red ;">Le profession ne peut-etre null !</small>
+            <div class="mb-3">
+                <label class="form-label" for="basic-default-fullname">Quartier</label>
+                <input type="text" class="form-control" id="username" placeholder="Veillez saisir le quartier" formControlName="quartier">
+                <div class="col-md" *ngIf="quartier.touched && quartier.invalid">
+                    <small *ngIf=" quartier.errors?.['required']" style="color:red ;">Le quartier ne peut-etre null !</small>
 
-                    </div>
                 </div>
-                <div class="col-6">
-                    <label class="form-label" for="basic-default-fullname">Date de naissance </label>
-                    <p-calendar formControlName="date_naiss"></p-calendar>
-                    <div class="col-md" *ngIf="date_naiss.touched && date_naiss.invalid">
-                        <small *ngIf=" date_naiss.errors?.['required']" style="color:red ;">La date de naissance ne peut-etre null !</small>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="basic-default-fullname">Cni</label>
+                <input type="text" class="form-control" id="username" placeholder="Veillez saisir le numéro de la cni" formControlName="numero_cni">
+                <div class="col-md" *ngIf="numero_cni.touched && numero_cni.invalid">
+                    <small *ngIf=" numero_cni.errors?.['required']" style="color:red ;">Le numéro de la cni ne peut-etre null !</small>
 
-                    </div>
                 </div>
-
             </div>
 
-            <div class="row mt-2">
-                <div class="col-6">
-                    <label class="form-label" for="basic-default-fullname">Téléphone</label>
-                    <input type="text" class="form-control" id="username" placeholder="Veillez saisir la profession" formControlName="telephone">
-                    <div class="col-md" *ngIf="telephone.touched && telephone.invalid">
-                        <small *ngIf=" telephone.errors?.['required']" style="color:red ;">Le profession ne peut-etre null !</small>
+            <div class="mb-3">
+                <label class="form-label" for="basic-default-fullname">Profession</label>
+                <input type="text" class="form-control" id="username" placeholder="Veillez saisir la profession" formControlName="profession">
+                <div class="col-md" *ngIf="profession.touched && profession.invalid">
+                    <small *ngIf=" profession.errors?.['required']" style="color:red ;">Le profession ne peut-etre null !</small>
 
-                    </div>
                 </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="basic-default-fullname">Date de naissance </label>
+                <input formControlName="date_naiss" class="form-control" type="date">
+                <div class="col-md" *ngIf="date_naiss.touched && date_naiss.invalid">
+                    <small *ngIf=" date_naiss.errors?.['required']" style="color:red ;">La date de naissance ne peut-etre null !</small>
 
-                <div class="col-6">
-                    <label class="form-label" for="basic-default-fullname">Sexe</label>
-                    <p-dropdown inputId="dropdown" [autoDisplayFirst]="false" [filter]="true" filterBy="name" [options]="sexes" optionLabel="nom" appendTo="body" optionValue="nom" formControlName="sexe" placeholder="Choisir le sexe " class="col-md"></p-dropdown>
-                    <div class="col-md" *ngIf="sexe.touched && sexe.invalid">
-                        <small *ngIf=" sexe.errors?.['required']" style="color:red ;">Le sexe ne peut-etre null !</small>
-
-                    </div>
                 </div>
+            </div>
 
+            <div class="mb-3">
+                <label class="form-label" for="basic-default-fullname">Téléphone</label>
+                <input type="text" class="form-control" id="username" placeholder="Veillez saisir la profession" formControlName="telephone">
+                <div class="col-md" *ngIf="telephone.touched && telephone.invalid">
+                    <small *ngIf=" telephone.errors?.['required']" style="color:red ;">Le profession ne peut-etre null !</small>
+
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" for="basic-default-fullname">Sexe</label>
+                <p-dropdown inputId="dropdown" [autoDisplayFirst]="false" [filter]="true" filterBy="name" [options]="sexes" optionLabel="nom" appendTo="body" optionValue="nom" formControlName="sexe" placeholder="Choisir le sexe " class="col-md"></p-dropdown>
+                <div class="col-md" *ngIf="sexe.touched && sexe.invalid">
+                    <small *ngIf=" sexe.errors?.['required']" style="color:red ;">Le sexe ne peut-etre null !</small>
+
+                </div>
             </div>
 
             <div class="mb-3">
@@ -269,29 +260,55 @@
 
                 </div>
             </div>
-
-
             <div class="mb-3">
-                <p-toolbar>
-                    <div class="">
-                        <input type="text" placeholder="" lass="form-control" pInputText [formControl]="nom_antecedent" required />
-                    </div>
-                    <div class="">
-                        <input type="text" placeholder="" lass="form-control" pInputText [formControl]="description" required />
-                    </div>
-                    <div class="">
-                        <input type="text" placeholder="" lass="form-control" pInputText [formControl]="type" required />
-                    </div>
-                    <div class="">
-                        <p-calendar placeholder="" [formControl]="date_ante"></p-calendar>
-                    </div>
-                    <div class="">
+                <div class="mt-2 bg-light p-2 ">
+                    <h4 class="text-center text-secondary">Maladies antécedentes</h4>
+                    <div class="col">
+                        <input type="text" placeholder="nom de la maladie antécedente " class="form-control" pInputText [formControl]="nom_antecedent" required />
+                    </div><br>
+                    <div class="col">
+                        <textarea type="textarea" rows="3" placeholder=" description de la maladie" class="form-control" pInputText [formControl]="description" required></textarea>
+                    </div><br>
+                    <div class="col">
+                        <input type="text" placeholder=" type de maladie" class="form-control" pInputText [formControl]="type" required />
+                    </div><br>
+                    <div class="col">
+                        <input type="date" placeholder=" date de la maladie" class="form-control" pInputText [formControl]="date_ante" required />
+
+                    </div><br>
+                    <div class="col">
                         <button type="button" [disabled]="nom_antecedent.status != 'VALID' || date_ante.status != 'VALID' || description.status != 'VALID' || type.status != 'VALID'" pButton pRipple icon="pi pi-plus" styleClass="p-button-warn" (click)="addAntecedent(nom_antecedent,description,type,date_ante)"></button>
                     </div>
 
-                </p-toolbar>
-            </div>
+                </div>
 
+                <p-table [value]="antecedents" [scrollable]="true" scrollHeight="200px">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>Nom antécedent</th>
+                            <th>Type </th>
+                            <th>Date</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-antecedent>
+                        <tr>
+                            <td>
+                                {{antecedent.nom_antecedent}}
+                            </td>
+                            <td>
+                                {{antecedent.type}}
+                            </td>
+                            <td>
+                                {{antecedent.date_ante | date}}
+                            </td>
+                            <td>
+                                <button pButton pRipple type="button" (click)="deleteAntecedent(antecedent.nom_antecedent)" icon="pi pi-times" class="p-button-rounded p-button-danger p-button-text"></button>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+
+            </div>
 
 
 
@@ -299,7 +316,7 @@
     </ng-template>
     <ng-template pTemplate="footer">
         <span>
-            <button pButton pRipple label="Enregistrer" (click)="addPatient()" icon="pi pi-check" class="p-button-info" [disabled]="addPatientForm.status != 'VALID'"></button>
+            <button pButton pRipple label="Enregistrer" (click)="addPatient()" [disabled]="addPatientForm.status != 'VALID'"></button>
         </span>
         <span>
             <button pButton pRipple label="Annuler" icon="pi pi-times" (click)="hideDialog()" class="p-button-danger"></button>
@@ -312,9 +329,8 @@
 
 
         <p-tabView class="mt-2">
-            <p-tabPanel header="Informations personnel" class=" text-decoration-none">
+            <p-tabPanel header="Informations personnel" style="text-decoration: none!important;">
                 <div id="htmlData" class="text-center  text-bold">
-                    <div class=" bg-primary text-white p-2 text-center col-md">Detail du patient</div>
                     <span class=" font-weight-bold"> Nom: {{ patientID.nom}} </span> &nbsp; <span class=" font-weight-bold">prénom: {{ patientID.prenom}} </span> <br>
                     <span> Quartier: {{ patientID.quartier}} </span> &nbsp; <span>Numéro Cni: {{ patientID.numero_cni}} </span> <br>
                     <span> Profession: {{ patientID.profession}} </span> &nbsp; <span>Date de naissance: {{ patientID.date_naiss| date:'dd/MM/yyyy'}} </span> <br>
@@ -325,22 +341,24 @@
             </p-tabPanel>
             <p-tabPanel header="Maladies antécedents">
                 <p>
-                    Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas
-                    sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Consectetur, adipisci velit, sed quia non numquam eius modi.
+                    <span>Nom de la maladie : {{patientID.antecedents[0]?.nom_antecedent}} </span>&nbsp;&nbsp; <span>Type de  maladie : {{patientID.antecedents[0]?.type}} </span><br>
+                    <span>Description : {{patientID.antecedents[0]?.description}} </span><br>
+                    <span>Date : {{patientID.antecedents[0]?.date_ante | date:'dd/MM/yyyy'}} </span>
                 </p>
             </p-tabPanel>
         </p-tabView>
 
-        <div class="row col-md m-auto">
-            <div class="col">
-                <button type="submit" class="btn btn-primary" (click)="openPDF()">Imprimer</button>
-            </div>
-            <div class="col">
-                <button type="submit" class="btn btn-danger" (click)="detailDialog=false">Annuler et quitter</button>
-            </div>
 
-        </div>
 
+    </ng-template>
+    <ng-template pTemplate="footer">
+        <span>
+            <button pButton pRipple label="Imprimer" (click)="openPDF()" ></button>
+        </span>
+        <span>
+            <button pButton pRipple label="Annuler" icon="pi pi-times" (click)="hideDialog()" class="p-button-danger"></button>
+        </span>
     </ng-template>
 </p-dialog>
 <p-toast></p-toast>
+<p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>
